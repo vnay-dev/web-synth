@@ -50,6 +50,7 @@ class TouchSynthesizer {
         this.soundPresetElement = document.getElementById('soundPreset');
         this.vibeValueElement = document.getElementById('vibeValue');
         this.arenaInstructionElement = document.getElementById('arenaInstruction');
+        this.taglineElement = document.getElementById('tagline');
         
 
         
@@ -182,6 +183,7 @@ class TouchSynthesizer {
         
         // Set appropriate instruction based on device type
         this.updateInstruction();
+        this.updateTagline();
     }
     
     detectLaptop() {
@@ -208,6 +210,22 @@ class TouchSynthesizer {
         }
         
         this.arenaInstructionElement.textContent = instruction;
+    }
+    
+    updateTagline() {
+        if (!this.taglineElement) return;
+        
+        let tagline = '';
+        
+        if (this.hasTouchCapability) {
+            // Mobile devices and tablets
+            tagline = 'Make music at your fingertips!';
+        } else {
+            // Desktop devices (laptop/desktop)
+            tagline = 'Turn your touchpad into a musical instrument!';
+        }
+        
+        this.taglineElement.textContent = tagline;
     }
     
     handleMouseDown(event) {
