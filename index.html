@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glidr 101</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Welcome Page -->
+    <div class="welcome-page" id="welcomePage">
+        <div class="welcome-background">
+            <img src="assets/wallpaper.png" alt="Background" class="wallpaper-bg">
+        </div>
+        
+        <div class="welcome-content">
+            <div class="welcome-content-container">
+                <div class="title-container">
+                    <img src="assets/title.svg" alt="Glidr 101" class="title-logo">
+                </div>
+                <p class="tagline">Turn your touchpad into a musical instrument!</p>
+            </div>           
+            <button class="lets-play-btn" id="letsPlayBtn">Let's Play!</button>
+        </div>
+    </div>
+
+    <!-- Play Arena Page -->
+    <div class="play-arena-page" id="playArenaPage" style="display: none;">
+        <div class="arena-background">
+            <img src="assets/retro-bg.svg" alt="Retro Background" class="retro-bg">
+        </div>
+        
+        <!-- Top Control Bar -->
+        <div class="control-bar">
+            <div class="control-section">
+                <div class="control-item">
+                    <div class="control-text">
+                        <img src="assets/music-note.svg" alt="Sound" class="control-icon">
+                        <span class="control-label">SOUND PRESET</span>
+                    </div>
+                    <div class="control-arrows">
+                        <img src="assets/left-arrow.svg" alt="Left Arrow" class="left-arrow">
+                        <span class="control-value" id="soundPreset">Warm Pad</span>
+                        <img src="assets/right-arrow.svg" alt="Right Arrow" class="right-arrow">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-divider"></div>
+            
+            <div class="control-section">
+                <div class="control-item">
+                    <div class="control-text">
+                        <img src="assets/vibe.svg" alt="Vibe" class="control-icon">
+                        <span class="control-label">VIBE</span>
+                    </div>
+                    <div class="control-arrows">
+                        <img src="assets/left-arrow.svg" alt="Left Arrow" class="left-arrow">
+                        <span class="control-value" id="vibeValue">Major</span>
+                        <img src="assets/right-arrow.svg" alt="Right Arrow" class="right-arrow">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Arena Content Container -->
+        <div class="arena-content">
+            <!-- Main Interactive Pad -->
+            <div class="interactive-pad" id="touchArea">
+                <div class="pad-content">
+                    <div class="pad-grid"></div>
+                    <img src="assets/controller.svg" alt="Controller" class="controller-cursor" id="controllerCursor">
+                </div>
+            </div>
+
+            <!-- Bottom Text -->
+            <div class="bottom-text">
+                <img src="assets/footer-title.svg" alt="Glidr 101" class="arena-title">
+                <p class="arena-instruction">Drag your finger over the pad to play music</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
