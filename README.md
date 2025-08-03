@@ -28,9 +28,10 @@ Turn your touchpad into a musical instrument! Glidr 101 is an interactive web-ba
   - **Pentatonic** - Harmonious 5-note scale
 
 ### Cross-Platform Compatibility
-- **Desktop**: Mouse and trackpad support
+- **Desktop Mouse**: Click and drag for precise control
+- **Laptop Trackpad**: Touch and drag (no clicking required) - just like mobile!
 - **Mobile**: Touch-optimized for smartphones and tablets
-- **Responsive Design**: Works on all screen sizes
+- **Responsive Design**: Works on all screen sizes with proper UI scaling
 
 ## 🚀 Getting Started
 
@@ -58,7 +59,8 @@ Turn your touchpad into a musical instrument! Glidr 101 is an interactive web-ba
 - **Vibe/Scale**: Click arrows to change the musical scale
 
 ### Tips for Best Experience
-- **Desktop**: Use your mouse or trackpad for precise control
+- **Desktop Mouse**: Click and drag for precise control
+- **Laptop Trackpad**: Simply touch and drag - no clicking needed!
 - **Mobile**: Use single-finger touch for optimal performance
 - **Volume**: Move your finger lower on the pad for louder sounds
 - **Melody**: Move horizontally to create melodic sequences
@@ -70,6 +72,12 @@ Turn your touchpad into a musical instrument! Glidr 101 is an interactive web-ba
 - **CSS3**: Responsive design and animations
 - **JavaScript (ES6+)**: Interactive functionality and audio processing
 - **Web Audio API**: Real-time audio synthesis
+
+### Recent Improvements
+- **Smart Device Detection**: Automatically detects laptop trackpads vs desktop mice
+- **Enhanced Trackpad Support**: Laptop users can touch and drag without clicking
+- **Improved UI Scaling**: Fixed layout issues for better visibility on all screen sizes
+- **Dynamic Instructions**: Device-specific guidance for optimal user experience
 
 ### Audio Architecture
 - **Oscillators**: Generate different waveform types (sine, sawtooth, triangle, square)
@@ -113,8 +121,9 @@ web-synth/
 - **Accessibility**: High contrast and readable typography
 
 ### User Experience
-- **Intuitive Interface**: Easy-to-understand controls
+- **Intuitive Interface**: Easy-to-understand controls with device-specific instructions
 - **Immediate Feedback**: Instant audio and visual response
+- **Smart Device Detection**: Automatically adapts interaction method based on device type
 - **Mobile Optimized**: Touch-friendly design
 - **No Learning Curve**: Start creating music immediately
 
@@ -147,6 +156,8 @@ We welcome contributions! Here are some ways you can help:
 - Better mobile support
 - Accessibility enhancements
 - Code refactoring
+- Enhanced trackpad support
+- Improved responsive design
 
 ### How to Contribute
 1. Fork the repository

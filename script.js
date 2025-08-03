@@ -49,6 +49,7 @@ class TouchSynthesizer {
         this.letsPlayBtn = document.getElementById('letsPlayBtn');
         this.soundPresetElement = document.getElementById('soundPreset');
         this.vibeValueElement = document.getElementById('vibeValue');
+        this.arenaInstructionElement = document.getElementById('arenaInstruction');
         
 
         
@@ -143,13 +144,13 @@ class TouchSynthesizer {
     }
 
     setupEventListeners() {
-        // Mouse events for click-based playing
+        // Mouse events for click-based playing (desktop mouse)
         this.touchArea.addEventListener('mousedown', this.handleMouseDown.bind(this));
         this.touchArea.addEventListener('mousemove', this.handleMouseMove.bind(this));
         this.touchArea.addEventListener('mouseup', this.handleMouseUp.bind(this));
-        this.touchArea.addEventListener('mouseleave', this.handleMouseUp.bind(this));
+        this.touchArea.addEventListener('mouseleave', this.handleMouseLeave.bind(this));
         
-        // Touch events for mobile devices (single finger)
+        // Touch events for mobile devices and trackpads
         this.touchArea.addEventListener('touchstart', this.handleTouchStart.bind(this));
         this.touchArea.addEventListener('touchmove', this.handleTouchMove.bind(this));
         this.touchArea.addEventListener('touchend', this.handleTouchEnd.bind(this));
@@ -162,11 +163,62 @@ class TouchSynthesizer {
         // Track mouse state
         this.isMouseDown = false;
         this.isTrackpadMode = false;
+        this.lastMouseMoveTime = 0;
+        this.mouseMoveCount = 0;
+        this.trackpadTimeout = null;
+        
+        // Detect if device has touch capability (includes trackpads)
+        this.hasTouchCapability = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        // Detect if this is likely a laptop with trackpad
+        this.isLaptop = this.detectLaptop();
+        
+        // Debug logging
+        console.log('Device detection:', {
+            hasTouchCapability: this.hasTouchCapability,
+            isLaptop: this.isLaptop,
+            userAgent: navigator.userAgent
+        });
+        
+        // Set appropriate instruction based on device type
+        this.updateInstruction();
+    }
+    
+    detectLaptop() {
+        // Check if this is likely a laptop with trackpad
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isMobile = /mobile|android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent);
+        const hasTouchCapability = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        // If it's not mobile but has touch capability, it's likely a laptop with trackpad
+        return !isMobile && hasTouchCapability;
+    }
+    
+    updateInstruction() {
+        if (!this.arenaInstructionElement) return;
+        
+        let instruction = '';
+        
+        if (this.hasTouchCapability) {
+            // Mobile devices and tablets
+            instruction = 'Drag your finger over the pad to play music';
+        } else {
+            // Desktop devices (mouse users)
+            instruction = 'Tap once and drag your finger over the pad to play music';
+        }
+        
+        this.arenaInstructionElement.textContent = instruction;
     }
     
     handleMouseDown(event) {
         // Only respond to left mouse button
         if (event.button !== 0) return;
+        
+        // If this is a laptop with trackpad, don't start playback on mouse down
+        // This allows trackpad users to use touch events instead
+        if (this.isLaptop) {
+            return;
+        }
         
         this.isMouseDown = true;
         this.isTrackpadMode = false;
@@ -192,23 +244,88 @@ class TouchSynthesizer {
     }
     
     handleMouseMove(event) {
-        // Only play if mouse is down (left click held)
+        const currentTime = Date.now();
+        const position = this.getPosition(event);
+        
+        // If this is a laptop with trackpad, detect trackpad usage
+        if (this.isLaptop) {
+            // Track mouse movement frequency to detect trackpad vs mouse
+            this.mouseMoveCount++;
+            
+            // If we're getting frequent mouse movements without clicks, it's likely a trackpad
+            if (this.mouseMoveCount > 5 && currentTime - this.lastMouseMoveTime < 100) {
+                this.isTrackpadMode = true;
+                console.log('Trackpad mode activated');
+            }
+            
+            this.lastMouseMoveTime = currentTime;
+            
+            // Clear any existing timeout
+            if (this.trackpadTimeout) {
+                clearTimeout(this.trackpadTimeout);
+            }
+            
+            // Set timeout to reset trackpad mode if no movement for 1 second
+            this.trackpadTimeout = setTimeout(() => {
+                this.isTrackpadMode = false;
+                this.mouseMoveCount = 0;
+            }, 1000);
+            
+            // If in trackpad mode, start playing immediately
+            if (this.isTrackpadMode && !this.isPlaying) {
+                if (!this.audioContext) {
+                    this.initAudioContext().then(() => {
+                        if (this.audioContext) {
+                            this.startPlayback(event);
+                        }
+                    });
+                    return;
+                }
+                
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume().then(() => {
+                        this.startPlayback(event);
+                    });
+                    return;
+                }
+                
+                this.startPlayback(event);
+            }
+            
+            // Update position and audio if playing
+            this.updatePosition(position);
+            if (this.isPlaying) {
+                this.updateAudio(position);
+            }
+            return;
+        }
+        
+        // Only play if mouse is down (left click held) for non-touch devices
         if (!this.isMouseDown) {
             // Update cursor position without playing sound
-            const position = this.getPosition(event);
             this.updatePosition(position);
             return;
         }
         
         if (!this.isPlaying) return;
         
-        const position = this.getPosition(event);
         this.updatePosition(position);
         this.updateAudio(position);
     }
     
     handleMouseUp(event) {
         this.isMouseDown = false;
+        this.stopPlayback();
+    }
+    
+    handleMouseLeave(event) {
+        this.isMouseDown = false;
+        this.isTrackpadMode = false;
+        this.mouseMoveCount = 0;
+        if (this.trackpadTimeout) {
+            clearTimeout(this.trackpadTimeout);
+            this.trackpadTimeout = null;
+        }
         this.stopPlayback();
     }
     
@@ -225,7 +342,7 @@ class TouchSynthesizer {
         // Single finger touch for both mobile and trackpad
         if (event.touches.length === 1) {
             this.isMouseDown = true;
-            this.isTrackpadMode = false;
+            this.isTrackpadMode = true;
         } else {
             return; // Ignore multiple touches
         }
@@ -247,7 +364,7 @@ class TouchSynthesizer {
             return;
         }
         
-            this.startPlayback(event);
+        this.startPlayback(event);
     }
     
     handleTouchMove(event) {

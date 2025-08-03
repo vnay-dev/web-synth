@@ -127,7 +127,9 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 60px;
+    gap: 36px;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 .arena-background {
@@ -260,8 +262,8 @@ body {
 /* Interactive Pad */
 .interactive-pad {
     position: relative;
-    width: 864px;
-    height: 614px;
+    width: min(864px, calc(100vw - 80px));
+    height: min(614px, calc(100vh - 260px));
     margin: 0 auto;
     border-radius: 24px;
     user-select: none;
@@ -337,12 +339,12 @@ body {
     
     .arena-content {
         gap: 40px;
-        padding: 0 40px;
+        padding: 0 20px;
     }
     
     .interactive-pad {
-        width: calc(100vw - 80px);
-        max-width: 800px;
+        width: min(800px, calc(100vw - 40px));
+        height: min(500px, calc(100vh - 250px));
     }
 }
 
@@ -355,7 +357,7 @@ body {
     
     .arena-content {
         gap: 35px;
-        padding: 0 30px;
+        padding: 0 15px;
     }
     
     .interactive-pad {
@@ -444,13 +446,13 @@ body {
     
     .arena-content {
         gap: 20px;
-        padding: 40px 20px 0 20px;
+        padding: 20px 10px 0 10px;
         justify-content: start;
     }
     
     .interactive-pad {
-        width: calc(100vw - 40px);
-        height: calc(100vh - 200px);
+        width: min(100vw - 20px, 100%);
+        height: min(calc(100vh - 200px), 70vh);
         max-width: 100%;
         max-height: 70vh;
         margin: 0 auto;
@@ -590,6 +592,17 @@ body {
         margin: 0 auto;
         max-width: 728px;
         width: calc(100% - 30px);
+    }
+    
+    .arena-content {
+        padding: 0 5px;
+        gap: 15px;
+    }
+    
+    .interactive-pad {
+        width: min(100vw - 10px, 100%);
+        height: min(calc(100vh - 150px), 60vh);
+        border-radius: 12px;
     }
     
     .control-item {
