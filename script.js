@@ -5,12 +5,12 @@ class TouchSynthesizer {
         this.gainNodes = []; // Array to hold corresponding gain nodes
         this.isPlaying = false;
         this.currentFrequency = 0;
-        
+
         // Note names for chromatic scale
         this.noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         // Black keys (sharps/flats) for visual distinction
         this.blackKeys = ['C#', 'D#', 'F#', 'G#', 'A#'];
-        
+
         // Scale definitions
         this.scales = {
             major: [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25],
@@ -40,7 +40,7 @@ class TouchSynthesizer {
 
         this.currentSoundIndex = 0;
         this.currentVibeIndex = 0;
-        
+
         // DOM elements
         this.welcomePage = document.getElementById('welcomePage');
         this.playArenaPage = document.getElementById('playArenaPage');
@@ -51,41 +51,44 @@ class TouchSynthesizer {
         this.vibeValueElement = document.getElementById('vibeValue');
         this.arenaInstructionElement = document.getElementById('arenaInstruction');
         this.taglineElement = document.getElementById('tagline');
-        
 
-        
+
+
         // Control elements
         this.rootKey = 'C'; // Default root key is C
         this.defaultOctave = 3; // Fixed octave value
         this.snapToScale = true; // Always snap to scale
-        
+
         this.init();
     }
-    
+
     init() {
         this.setupEventListeners();
         this.setupNavigation();
         this.setupControls();
     }
-    
+
+
 
 
     setupNavigation() {
-        this.letsPlayBtn.addEventListener('click', () => {
-            this.navigateToPlayArena();
-        });
+        if (this.letsPlayBtn) {
+            this.letsPlayBtn.addEventListener('click', () => {
+                this.navigateToPlayArena();
+            });
+        }
     }
 
     setupControls() {
         // Setup sound preset controls
         const soundLeftArrow = document.querySelector('.control-section:first-child .left-arrow');
         const soundRightArrow = document.querySelector('.control-section:first-child .right-arrow');
-        
+
         soundLeftArrow.addEventListener('click', () => {
             this.currentSoundIndex = (this.currentSoundIndex - 1 + this.soundPresets.length) % this.soundPresets.length;
             this.updateSoundPreset();
         });
-        
+
         soundRightArrow.addEventListener('click', () => {
             this.currentSoundIndex = (this.currentSoundIndex + 1) % this.soundPresets.length;
             this.updateSoundPreset();
@@ -94,12 +97,12 @@ class TouchSynthesizer {
         // Setup vibe controls
         const vibeLeftArrow = document.querySelector('.control-section:last-child .left-arrow');
         const vibeRightArrow = document.querySelector('.control-section:last-child .right-arrow');
-        
+
         vibeLeftArrow.addEventListener('click', () => {
             this.currentVibeIndex = (this.currentVibeIndex - 1 + this.vibeOptions.length) % this.vibeOptions.length;
             this.updateVibeValue();
         });
-        
+
         vibeRightArrow.addEventListener('click', () => {
             this.currentVibeIndex = (this.currentVibeIndex + 1) % this.vibeOptions.length;
             this.updateVibeValue();
@@ -117,27 +120,36 @@ class TouchSynthesizer {
     }
 
     navigateToPlayArena() {
-        this.welcomePage.style.display = 'none';
+        // Add class to trigger door opening animation
+        this.welcomePage.classList.add('door-open');
+
+        // Initialize audio context immediately on user interaction
+        this.initAudioContext();
+
+        // Show play arena immediately behind the doors
         this.playArenaPage.style.display = 'flex';
-        
+
         // Initialize controller cursor position at center
         this.controllerCursor.style.left = '50%';
         this.controllerCursor.style.top = '50%';
         this.controllerCursor.style.transform = 'translate(-50%, -50%)';
-        
-        // Initialize audio context when entering play arena
-        this.initAudioContext();
+
+        // Wait for animation to complete before hiding welcome page (optional, but keeps DOM clean)
+        // Matching the CSS transition time of 1.5s
+        setTimeout(() => {
+            this.welcomePage.classList.add('hidden');
+        }, 1500);
     }
-    
+
     async initAudioContext() {
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
+
             // Resume audio context if it's suspended
             if (this.audioContext.state === 'suspended') {
                 await this.audioContext.resume();
             }
-            
+
             console.log('Audio context initialized and ready');
         } catch (error) {
             console.error('Failed to initialize audio context:', error);
@@ -150,57 +162,57 @@ class TouchSynthesizer {
         this.touchArea.addEventListener('mousemove', this.handleMouseMove.bind(this));
         this.touchArea.addEventListener('mouseup', this.handleMouseUp.bind(this));
         this.touchArea.addEventListener('mouseleave', this.handleMouseLeave.bind(this));
-        
+
         // Touch events for mobile devices and trackpads
         this.touchArea.addEventListener('touchstart', this.handleTouchStart.bind(this));
         this.touchArea.addEventListener('touchmove', this.handleTouchMove.bind(this));
         this.touchArea.addEventListener('touchend', this.handleTouchEnd.bind(this));
         this.touchArea.addEventListener('touchcancel', this.handleTouchEnd.bind(this));
-        
+
         // Prevent default touch behaviors
         this.touchArea.addEventListener('touchstart', e => e.preventDefault());
         this.touchArea.addEventListener('touchmove', e => e.preventDefault());
-        
+
         // Track mouse state
         this.isMouseDown = false;
         this.isTrackpadMode = false;
         this.lastMouseMoveTime = 0;
         this.mouseMoveCount = 0;
         this.trackpadTimeout = null;
-        
+
         // Detect if device has touch capability (includes trackpads)
         this.hasTouchCapability = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        
+
         // Detect if this is likely a laptop with trackpad
         this.isLaptop = this.detectLaptop();
-        
+
         // Debug logging
         console.log('Device detection:', {
             hasTouchCapability: this.hasTouchCapability,
             isLaptop: this.isLaptop,
             userAgent: navigator.userAgent
         });
-        
+
         // Set appropriate instruction based on device type
         this.updateInstruction();
         this.updateTagline();
     }
-    
+
     detectLaptop() {
         // Check if this is likely a laptop with trackpad
         const userAgent = navigator.userAgent.toLowerCase();
         const isMobile = /mobile|android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent);
         const hasTouchCapability = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        
+
         // If it's not mobile but has touch capability, it's likely a laptop with trackpad
         return !isMobile && hasTouchCapability;
     }
-    
+
     updateInstruction() {
         if (!this.arenaInstructionElement) return;
-        
+
         let instruction = '';
-        
+
         if (this.hasTouchCapability) {
             // Mobile devices and tablets
             instruction = 'Drag your finger over the pad to play music';
@@ -208,15 +220,15 @@ class TouchSynthesizer {
             // Desktop devices (mouse users)
             instruction = 'Tap once and drag your finger over the pad to play music';
         }
-        
+
         this.arenaInstructionElement.textContent = instruction;
     }
-    
+
     updateTagline() {
         if (!this.taglineElement) return;
-        
+
         let tagline = '';
-        
+
         if (this.hasTouchCapability) {
             // Mobile devices and tablets
             tagline = 'Make music at your fingertips!';
@@ -224,23 +236,23 @@ class TouchSynthesizer {
             // Desktop devices (laptop/desktop)
             tagline = 'Turn your touchpad into a musical instrument!';
         }
-        
+
         this.taglineElement.textContent = tagline;
     }
-    
+
     handleMouseDown(event) {
         // Only respond to left mouse button
         if (event.button !== 0) return;
-        
+
         // If this is a laptop with trackpad, don't start playback on mouse down
         // This allows trackpad users to use touch events instead
         if (this.isLaptop) {
             return;
         }
-        
+
         this.isMouseDown = true;
         this.isTrackpadMode = false;
-        
+
         if (!this.audioContext) {
             this.initAudioContext().then(() => {
                 if (this.audioContext) {
@@ -249,7 +261,7 @@ class TouchSynthesizer {
             });
             return;
         }
-        
+
         // Resume audio context if it's suspended
         if (this.audioContext.state === 'suspended') {
             this.audioContext.resume().then(() => {
@@ -257,38 +269,38 @@ class TouchSynthesizer {
             });
             return;
         }
-        
+
         this.startPlayback(event);
     }
-    
+
     handleMouseMove(event) {
         const currentTime = Date.now();
         const position = this.getPosition(event);
-        
+
         // If this is a laptop with trackpad, detect trackpad usage
         if (this.isLaptop) {
             // Track mouse movement frequency to detect trackpad vs mouse
             this.mouseMoveCount++;
-            
+
             // If we're getting frequent mouse movements without clicks, it's likely a trackpad
             if (this.mouseMoveCount > 5 && currentTime - this.lastMouseMoveTime < 100) {
                 this.isTrackpadMode = true;
                 console.log('Trackpad mode activated');
             }
-            
+
             this.lastMouseMoveTime = currentTime;
-            
+
             // Clear any existing timeout
             if (this.trackpadTimeout) {
                 clearTimeout(this.trackpadTimeout);
             }
-            
+
             // Set timeout to reset trackpad mode if no movement for 1 second
             this.trackpadTimeout = setTimeout(() => {
                 this.isTrackpadMode = false;
                 this.mouseMoveCount = 0;
             }, 1000);
-            
+
             // If in trackpad mode, start playing immediately
             if (this.isTrackpadMode && !this.isPlaying) {
                 if (!this.audioContext) {
@@ -299,17 +311,17 @@ class TouchSynthesizer {
                     });
                     return;
                 }
-                
+
                 if (this.audioContext.state === 'suspended') {
                     this.audioContext.resume().then(() => {
                         this.startPlayback(event);
                     });
                     return;
                 }
-                
+
                 this.startPlayback(event);
             }
-            
+
             // Update position and audio if playing
             this.updatePosition(position);
             if (this.isPlaying) {
@@ -317,25 +329,25 @@ class TouchSynthesizer {
             }
             return;
         }
-        
+
         // Only play if mouse is down (left click held) for non-touch devices
         if (!this.isMouseDown) {
             // Update cursor position without playing sound
             this.updatePosition(position);
             return;
         }
-        
+
         if (!this.isPlaying) return;
-        
+
         this.updatePosition(position);
         this.updateAudio(position);
     }
-    
+
     handleMouseUp(event) {
         this.isMouseDown = false;
         this.stopPlayback();
     }
-    
+
     handleMouseLeave(event) {
         this.isMouseDown = false;
         this.isTrackpadMode = false;
@@ -346,16 +358,16 @@ class TouchSynthesizer {
         }
         this.stopPlayback();
     }
-    
+
     startPlayback(event) {
         this.isPlaying = true;
         this.touchArea.classList.add('active');
-        
+
         const position = this.getPosition(event);
         this.updatePosition(position);
         this.startAudio(position);
     }
-    
+
     handleTouchStart(event) {
         // Single finger touch for both mobile and trackpad
         if (event.touches.length === 1) {
@@ -364,7 +376,7 @@ class TouchSynthesizer {
         } else {
             return; // Ignore multiple touches
         }
-        
+
         if (!this.audioContext) {
             this.initAudioContext().then(() => {
                 if (this.audioContext) {
@@ -373,7 +385,7 @@ class TouchSynthesizer {
             });
             return;
         }
-        
+
         // Resume audio context if it's suspended
         if (this.audioContext.state === 'suspended') {
             this.audioContext.resume().then(() => {
@@ -381,28 +393,28 @@ class TouchSynthesizer {
             });
             return;
         }
-        
+
         this.startPlayback(event);
     }
-    
+
     handleTouchMove(event) {
         // Only play if single finger is touching and mouse is down
         const shouldPlay = event.touches.length === 1 && this.isMouseDown;
-        
+
         if (!shouldPlay) {
             // Update cursor position without playing sound
             const position = this.getPosition(event);
             this.updatePosition(position);
             return;
         }
-        
+
         if (!this.isPlaying) return;
-        
+
         const position = this.getPosition(event);
         this.updatePosition(position);
         this.updateAudio(position);
     }
-    
+
     handleTouchEnd(event) {
         // Stop playing if no touches remain
         if (event.touches.length === 0) {
@@ -411,20 +423,20 @@ class TouchSynthesizer {
             this.stopPlayback();
         }
     }
-    
+
     stopPlayback() {
         this.isPlaying = false;
         this.touchArea.classList.remove('active');
         this.stopAllOscillators();
     }
-    
+
     createOscillator(frequency, preset) {
         const oscillator = this.audioContext.createOscillator();
         const gainNode = this.audioContext.createGain();
         const filterNode = this.audioContext.createBiquadFilter();
-        
+
         // Configure based on preset (matching Claude prototype)
-        switch(preset) {
+        switch (preset) {
             case 'warm-pad':
                 oscillator.type = 'sawtooth';
                 filterNode.type = 'lowpass';
@@ -454,14 +466,14 @@ class TouchSynthesizer {
 
         oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
         gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-        
+
         oscillator.connect(filterNode);
         filterNode.connect(gainNode);
         gainNode.connect(this.audioContext.destination);
-        
+
         return { oscillator, gainNode };
     }
-    
+
     stopAllOscillators() {
         this.oscillators.forEach((osc, index) => {
             try {
@@ -474,11 +486,11 @@ class TouchSynthesizer {
         this.oscillators = [];
         this.gainNodes = [];
     }
-    
+
     getPosition(event) {
         const rect = this.touchArea.getBoundingClientRect();
         let clientX, clientY;
-        
+
         if (event.touches && event.touches.length > 0) {
             clientX = event.touches[0].clientX;
             clientY = event.touches[0].clientY;
@@ -486,42 +498,42 @@ class TouchSynthesizer {
             clientX = event.clientX;
             clientY = event.clientY;
         }
-        
+
         const x = ((clientX - rect.left) / rect.width) * 100;
         const y = ((clientY - rect.top) / rect.height) * 100;
-        
+
         return {
             x: Math.max(0, Math.min(100, x)),
             y: Math.max(0, Math.min(100, y))
         };
     }
-    
+
     updatePosition(position) {
         // Use left/top for more responsive movement
         this.controllerCursor.style.left = `${position.x}%`;
         this.controllerCursor.style.top = `${position.y}%`;
         this.controllerCursor.style.transform = 'translate(-50%, -50%)';
     }
-    
+
     calculateFrequency(position) {
         // Simplified frequency calculation matching Claude prototype
         const selectedScale = this.vibeOptions[this.currentVibeIndex].value;
         const currentScale = this.scales[selectedScale];
-        
+
         // Map X position to note index in the scale
         const noteIndex = Math.floor((position.x / 100) * currentScale.length);
         const frequency = currentScale[noteIndex] || currentScale[0];
-        
+
         // Calculate volume based on Y position (lower = louder, like Claude prototype)
         const volume = (1 - position.y / 100) * 0.3;
-        
+
         return {
             frequency: frequency,
             volume: volume,
             noteName: this.getNoteName(frequency)
         };
     }
-    
+
     getNoteName(frequency) {
         const noteNames = {
             261.63: 'C4', 277.18: 'C#4', 293.66: 'D4', 311.13: 'D#4', 329.63: 'E4',
@@ -530,50 +542,48 @@ class TouchSynthesizer {
         };
         return noteNames[frequency] || 'N/A';
     }
-    
+
     startAudio(position) {
         if (!this.audioContext) return;
-        
+
         // Clean up existing oscillators
         this.stopAllOscillators();
-        
+
         const noteInfo = this.calculateFrequency(position);
-        
+
         // Only create oscillator if volume is significant
         if (noteInfo.volume > 0.05) {
             const { oscillator, gainNode } = this.createOscillator(noteInfo.frequency, this.soundPresets[this.currentSoundIndex].value);
             oscillator.start();
             gainNode.gain.setTargetAtTime(noteInfo.volume, this.audioContext.currentTime, 0.1);
-            
+
             this.oscillators.push(oscillator);
             this.gainNodes.push(gainNode);
         }
-        
+
         this.currentFrequency = noteInfo.frequency;
     }
-    
+
     updateAudio(position) {
         if (!this.audioContext) return;
-        
+
         const noteInfo = this.calculateFrequency(position);
-        
+
         // Clean up existing oscillators and create new one
         this.stopAllOscillators();
-        
+
         // Only create oscillator if volume is significant
         if (noteInfo.volume > 0.05) {
             const { oscillator, gainNode } = this.createOscillator(noteInfo.frequency, this.soundPresets[this.currentSoundIndex].value);
             oscillator.start();
             gainNode.gain.setTargetAtTime(noteInfo.volume, this.audioContext.currentTime, 0.1);
-            
+
             this.oscillators.push(oscillator);
             this.gainNodes.push(gainNode);
         }
-        
+
         this.currentFrequency = noteInfo.frequency;
     }
-    
-
 
 
 }

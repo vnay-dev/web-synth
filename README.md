@@ -1,4 +1,4 @@
-# Glidr 101 - Web Touch Synthesizer
+# Glidr 101 - Web based touch synthesizer
 
 Turn your touchpad into a musical instrument! Glidr 101 is an interactive web-based synthesizer that lets you create music by simply dragging your finger across the screen.
 
@@ -9,7 +9,7 @@ Turn your touchpad into a musical instrument! Glidr 101 is an interactive web-ba
 ### Interactive Music Creation
 - **Touch-based Interface**: Create music by dragging your finger across the interactive pad
 - **Real-time Audio**: Instant sound generation using Web Audio API
-- **Visual Feedback**: See your finger movements translated into musical notes
+- **Audio Feedback**: See your finger movements translated into musical notes
 
 ### Sound Customization
 - **5 Sound Presets**:
@@ -73,59 +73,11 @@ Turn your touchpad into a musical instrument! Glidr 101 is an interactive web-ba
 - **JavaScript (ES6+)**: Interactive functionality and audio processing
 - **Web Audio API**: Real-time audio synthesis
 
-### Recent Improvements
-- **Smart Device Detection**: Automatically detects laptop trackpads vs desktop mice
-- **Enhanced Trackpad Support**: Laptop users can touch and drag without clicking
-- **Improved UI Scaling**: Fixed layout issues for better visibility on all screen sizes
-- **Dynamic Instructions**: Device-specific guidance for optimal user experience
-
 ### Audio Architecture
 - **Oscillators**: Generate different waveform types (sine, sawtooth, triangle, square)
 - **Filters**: Apply frequency filtering for sound shaping
 - **Gain Control**: Dynamic volume control based on touch position
 - **Scale Mapping**: Automatic note quantization to musical scales
-
-### Browser Compatibility
-- ✅ Chrome/Chromium (recommended)
-- ✅ Firefox
-- ✅ Safari
-- ✅ Edge
-- ⚠️ Internet Explorer (not supported)
-
-## 📁 Project Structure
-
-```
-web-synth/
-├── index.html          # Main application file
-├── script.js           # Core synthesizer logic
-├── styles.css          # Responsive styling
-├── assets/             # Visual assets
-│   ├── controller.svg
-│   ├── footer-title.svg
-│   ├── left-arrow.svg
-│   ├── music-note.svg
-│   ├── retro-bg.svg
-│   ├── right-arrow.svg
-│   ├── title.svg
-│   ├── vibe.svg
-│   └── wallpaper.png
-└── README.md           # This file
-```
-
-## 🎨 Design Features
-
-### Visual Design
-- **Retro Aesthetic**: Inspired by classic synthesizer interfaces
-- **Responsive Layout**: Adapts to different screen sizes
-- **Smooth Animations**: Fluid transitions and interactions
-- **Accessibility**: High contrast and readable typography
-
-### User Experience
-- **Intuitive Interface**: Easy-to-understand controls with device-specific instructions
-- **Immediate Feedback**: Instant audio and visual response
-- **Smart Device Detection**: Automatically adapts interaction method based on device type
-- **Mobile Optimized**: Touch-friendly design
-- **No Learning Curve**: Start creating music immediately
 
 ## 🔧 Development
 
@@ -140,51 +92,11 @@ web-synth/
 - The synthesizer automatically initializes audio context on first interaction
 - Audio may be suspended until user interaction (browser security feature)
 
-## 🤝 Contributing
-
-We welcome contributions! Here are some ways you can help:
-
-### Feature Ideas
-- Additional sound presets
-- New musical scales
-- Recording functionality
-- MIDI export capabilities
-- Social sharing features
-
-### Technical Improvements
-- Performance optimizations
-- Better mobile support
-- Accessibility enhancements
-- Code refactoring
-- Enhanced trackpad support
-- Improved responsive design
-
-### How to Contribute
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
 ## 🙏 Acknowledgments
 
 - Inspired by classic hardware synthesizers
 - Built with modern web technologies
 - Designed for music creators of all skill levels
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-1. Check browser compatibility
-2. Ensure your browser supports Web Audio API
-3. Try refreshing the page
-4. Open an issue on GitHub
-
----
 
 **Happy Music Making! 🎵**
 
