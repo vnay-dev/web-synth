@@ -594,17 +594,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Add some helper functions for mobile optimization
-function preventZoom(e) {
-    var t2 = e.timeStamp;
-    var t1 = e.currentTarget.dataset.lastTouch || t2;
-    var dt = t2 - t1;
-    var fingers = e.touches.length;
-    e.currentTarget.dataset.lastTouch = t2;
+(function () {
+    var lastTouchEnd = 0;
+    document.addEventListener('touchend', function (e) {
+        var now = e.timeStamp;
+        var dt = now - lastTouchEnd;
+        lastTouchEnd = now;
 
-    if (!dt || dt > 500 || fingers > 1) return; // not double-tap
-
-    e.preventDefault();
-    e.target.click();
-}
-
-document.addEventListener('touchend', preventZoom);
+        if (dt > 0 && dt < 500 && e.touches.length === 0) {
+            e.preventDefault();
+            e.target.click();
+        }
+    }, { passive: false });
+})();

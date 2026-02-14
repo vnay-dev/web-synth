@@ -425,11 +425,16 @@ body {
         border-bottom-right-radius: 6px;
     }
 
+    .control-section {
+        width: 100%;
+    }
+
     .control-item {
-        gap: 24px;
+        gap: 16px;
         justify-content: center;
         align-items: center;
         flex-direction: row;
+        width: 100%;
     }
 
     .control-arrows {
@@ -439,8 +444,8 @@ body {
         padding: 0 3px;
         justify-content: center;
         align-items: center;
-        width: 100px;
-        margin-left: 16px;
+        width: auto;
+        margin-left: 0;
     }
 
     .control-divider {
@@ -464,10 +469,7 @@ body {
         /* 13px */
         white-space: nowrap;
         min-width: 0;
-        max-width: 100%;
         text-align: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     .control-text {
@@ -476,13 +478,14 @@ body {
         margin-right: 0;
         margin-bottom: 0;
         gap: 6px;
-        width: 120px;
+        min-width: 120px;
+        flex-shrink: 0;
         justify-content: center;
     }
 
     .arena-content {
-        gap: 36px;
-        padding: 20px 16px 0 16px;
+        gap: 0;
+        padding: 0 16px 32px 16px;
     }
 
     .interactive-pad {
@@ -490,9 +493,13 @@ body {
         height: min(calc(100vh - 200px), 60vh);
         max-width: 100%;
         max-height: 60vh;
-        margin: 0 auto;
+        margin: auto auto 0 auto;
         border-radius: 12px;
         padding: 2px;
+    }
+
+    .bottom-text {
+        margin-top: auto;
     }
 
     .pad-content {
@@ -581,8 +588,8 @@ body {
     }
 
     .arena-content {
-        padding: 0 8px;
-        gap: 24px;
+        padding: 0 8px 28px 8px;
+        gap: 0;
     }
 
     .interactive-pad {
@@ -594,7 +601,7 @@ body {
     }
 
     .control-item {
-        gap: 24px;
+        gap: 16px;
         justify-content: center;
         align-items: center;
         flex-direction: row;
@@ -609,7 +616,7 @@ body {
         font-size: 0.8125rem;
         /* 13px */
         white-space: nowrap;
-        min-width: 60px;
+        min-width: 0;
         text-align: center;
     }
 
@@ -619,8 +626,9 @@ body {
         margin-right: 0;
         margin-bottom: 0;
         gap: 4px;
-        width: 100px;
-        justify-content: flex-start;
+        min-width: 120px;
+        flex-shrink: 0;
+        justify-content: center;
     }
 
     .control-arrows {
@@ -630,8 +638,8 @@ body {
         padding: 0 2px;
         justify-content: center;
         align-items: center;
-        width: 80px;
-        margin-left: 12px;
+        width: auto;
+        margin-left: 0;
     }
 
     .arena-instruction {
@@ -1063,7 +1071,8 @@ body {
     .tagline {
         font-size: 0.875rem;
         line-height: 1.5;
-        padding: 0 4px;
+        padding: 0;
+        white-space: nowrap;
     }
 
     .lets-play-btn {
@@ -1107,7 +1116,8 @@ body {
     .tagline {
         font-size: 0.8125rem;
         line-height: 1.5;
-        padding: 0 2px;
+        padding: 0;
+        white-space: nowrap;
     }
 
     .lets-play-btn {
