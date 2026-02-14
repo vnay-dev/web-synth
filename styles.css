@@ -439,12 +439,11 @@ body {
 
     .control-arrows {
         gap: 4px;
-        min-width: 0;
-        flex: 1;
+        min-width: 120px;
+        flex: 0 0 auto;
         padding: 0 3px;
         justify-content: center;
         align-items: center;
-        width: auto;
         margin-left: 0;
     }
 
@@ -485,7 +484,7 @@ body {
 
     .arena-content {
         gap: 0;
-        padding: 0 16px 32px 16px;
+        padding: 0 16px 0 16px;
     }
 
     .interactive-pad {
@@ -500,6 +499,7 @@ body {
 
     .bottom-text {
         margin-top: auto;
+        padding-bottom: max(36px, env(safe-area-inset-bottom, 0px));
     }
 
     .pad-content {
@@ -633,12 +633,11 @@ body {
 
     .control-arrows {
         gap: 3px;
-        min-width: 0;
-        flex: 1;
+        min-width: 110px;
+        flex: 0 0 auto;
         padding: 0 2px;
         justify-content: center;
         align-items: center;
-        width: auto;
         margin-left: 0;
     }
 
